@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moha Shop DZ - متجر شحن الألعاب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #7C3AED; --primary-light: #A78BFA; --primary-dark: #5B21B6;
+            --secondary: #F59E0B; --secondary-light: #FCD34D;
+            --dark: #0F0F1A; --darker: #080810; --card: #1A1A2E; --card-hover: #252542;
+            --text: #E2E8F0; --text-muted: #94A3B8;
+            --success: #10B981; --danger: #EF4444; --warning: #F59E0B; --info: #3B82F6;
+            --border: rgba(255,255,255,0.08); --glass: rgba(26, 26, 46, 0.7);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--darker); color: var(--text); min-height: 100vh; overflow-x: hidden; line-height: 1.6; }
+        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+        .bg-animation::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 20% 80%, rgba(124,58,237,0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(245,158,11,0.1) 0%, transparent 50%), radial-gradient(circle at 50% 50%, rgba(124,58,237,0.05) 0%, transparent 70%); animation: bgFloat 20s ease-in-out infinite; }
+        @keyframes bgFloat { 0%,100% { transform: translate(0,0) rotate(0deg); } 33% { transform: translate(2%,2%) rotate(1deg); } 66% { transform: translate(-1%,1%) rotate(-1deg); } }
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; overflow: hidden; }
+        .particle { position: absolute; width: 4px; height: 4px; background: var(--primary-light); border-radius: 50%; opacity: 0.3; animation: particleFloat linear infinite; }
+        @keyframes particleFloat { 0% { transform: translateY(100vh) rotate(0deg); opacity: 0; } 10% { opacity: 0.3; } 90% { opacity: 0.3; } 100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; } }
+        .header { background: var(--glass); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.75rem; font-size: 1.5rem; font-weight: 900; color: var(--text); text-decoration: none; }
+        .logo-icon { width: 45px; height: 45px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; box-shadow: 0 4px 15px rgba(124,58,237,0.4); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: all 0.3s; position: relative; cursor: pointer; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text); }
+        .nav-links a::after { content: ''; position: absolute; bottom: -5px; right: 0; width: 0; height: 2px; background: linear-gradient(90deg, var(--primary), var(--secondary)); transition: width 0.3s; }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+        .header-actions { display: flex; gap: 1rem; align-items: center; }
+        .user-info { display: flex; align-items: center; gap: 0.75rem; color: var(--text); }
+        .user-avatar { width: 38px; height: 38px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 10px; border: none; font-family: 'Tajawal', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; box-shadow: 0 4px 15px rgba(124,58,237,0.4); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(124,58,237,0.5); }
+        .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .btn-outline:hover { background: var(--card); border-color: var(--primary-light); }
+        .btn-success { background: linear-gradient(135deg, var(--success), #059669); color: white; }
+        .btn-danger { background: linear-gradient(135deg, var(--danger), #DC2626); color: white; }
+        .btn-warning { background: linear-gradient(135deg, var(--warning), #D97706); color: white; }
+        .btn-info { background: linear-gradient(135deg, var(--info), #2563EB); color: white; }
+        .btn-sm { padding: 0.4rem 1rem; font-size: 0.85rem; }
+        .btn-lg { padding: 0.8rem 2rem; font-size: 1.1rem; }
+        .working-hours-banner { background: linear-gradient(90deg, rgba(16,185,129,0.15), rgba(59,130,246,0.15)); border: 1px solid rgba(16,185,129,0.3); border-radius: 16px; padding: 1rem 2rem; margin: 1.5rem auto; max-width: 1400px; display: flex; align-items: center; justify-content: space-between; backdrop-filter: blur(10px); }
+        .working-hours-banner.closed { background: linear-gradient(90deg, rgba(239,68,68,0.15), rgba(245,158,11,0.15)); border-color: rgba(239,68,68,0.3); }
+        .status-indicator { display: flex; align-items: center; gap: 0.75rem; }
+        .status-dot { width: 12px; height: 12px; border-radius: 50%; position: relative; }
+        .status-dot.open { background: var(--success); box-shadow: 0 0 10px var(--success), 0 0 20px var(--success); animation: pulse 2s infinite; }
+        .status-dot.closed { background: var(--danger); box-shadow: 0 0 10px var(--danger); }
+        @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.2); } }
+        .status-text { font-weight: 700; font-size: 1.1rem; }
+        .status-text.open { color: var(--success); }
+        .status-text.closed { color: var(--danger); }
+        .hours-info { display: flex; align-items: center; gap: 1.5rem; }
+        .hours-info span { color: var(--text-muted); font-size: 0.9rem; }
+        .hours-info i { color: var(--secondary); }
+        .countdown-timer { background: var(--card); padding: 0.5rem 1rem; border-radius: 10px; font-family: 'Courier New', monospace; font-weight: 700; font-size: 1rem; color: var(--secondary); border: 1px solid var(--border); }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+
+        /* Hero */
+        .hero { display: grid; grid-template-columns: 1fr 420px; gap: 2rem; align-items: center; margin: 2rem auto; max-width: 1400px; padding: 0 2rem; }
+        .hero-card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; }
+        .hero h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .hero p { color: var(--text-muted); margin-bottom: 1.25rem; }
+
+        /* Products grid */
+        .products { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin: 2rem auto; max-width: 1400px; padding: 0 2rem; }
+        .product { background: var(--card); border: 1px solid var(--border); padding: 1rem; border-radius: 12px; transition: transform 0.18s, box-shadow 0.18s; }
+        .product:hover { transform: translateY(-6px); box-shadow: 0 10px 30px rgba(0,0,0,0.45); }
+        .product img { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 0.75rem; }
+        .product h3 { font-size: 1rem; margin-bottom: 0.25rem; }
+        .product .price { color: var(--secondary); font-weight: 800; }
+
+        /* Footer */
+        footer { margin-top: 3rem; padding: 2rem; border-top: 1px solid var(--border); background: transparent; }
+        .footer-inner { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; gap: 1rem; align-items: center; padding: 0 2rem; }
+
+        /* Mobile */
+        .mobile-nav-toggle { display: none; background: transparent; border: 1px solid var(--border); padding: 0.5rem; border-radius: 8px; color: var(--text); }
+        @media (max-width: 900px) {
+            .hero { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .mobile-nav-toggle { display: inline-flex; }
+            .products { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 480px) {
+            .products { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 1.5rem; }
+        }
+
+        /* Focus and accessibility */
+        a:focus, button:focus { outline: 3px solid rgba(124,58,237,0.25); outline-offset: 2px; }
+
+    </style>
+</head>
+<body>
+    <div class="bg-animation" aria-hidden="true"></div>
+    <div class="particles" id="particles" aria-hidden="true"></div>
+
+    <header class="header" role="banner">
+        <div class="header-content container">
+            <a href="#" class="logo" aria-label="Moha Shop DZ - العودة إلى الصفحة الرئيسية">
+                <div class="logo-icon" aria-hidden="true">M</div>
+                <span>متجر موها</span>
+            </a>
+
+            <nav role="navigation" aria-label="القائمة الرئيسية">
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#home" class="active">الرئيسية</a></li>
+                    <li><a href="#products">المنتجات</a></li>
+                    <li><a href="#about">من نحن</a></li>
+                    <li><a href="#contact">اتصل بنا</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <button class="mobile-nav-toggle" id="mobileNavToggle" aria-expanded="false" aria-controls="navLinks" aria-label="فتح القائمة"><i class="fa fa-bars"></i></button>
+                <div class="user-info" role="region" aria-label="معلومات المستخدم">
+                    <div class="user-avatar" aria-hidden="true">م</div>
+                    <div>
+                        <div style="font-weight:700;">مرحبا، ضيف</div>
+                    </div>
+                </div>
+                <a href="#" class="btn btn-primary" id="ctaBuy">اشترِ الآن</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="working-hours-banner" id="workingBanner" role="status" aria-live="polite">
+        <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+            <div class="status-indicator">
+                <span class="status-dot" id="statusDot" aria-hidden="true"></span>
+                <div>
+                    <div class="status-text" id="statusText">جارٍ التحميل...</div>
+                    <div class="hours-info"><i class="fa fa-clock"></i> <span id="hoursRange">09:00 - 21:00 (توقيت الجزائر)</span></div>
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:1rem;">
+                <div class="countdown-timer" id="countdown">--:--:--</div>
+                <a href="#contact" class="btn btn-outline">مراسلتنا</a>
+            </div>
+        </div>
+    </section>
+
+    <main>
+        <section class="hero" id="home">
+            <div class="hero-card">
+                <h1>شحن أسرع لألعابك المفضلة</h1>
+                <p>اشتري بطاقات، عملات، ومحتوى رقمي لحظياً مع دعم فني سريع ودفع آمن.</p>
+                <div style="display:flex;gap:0.75rem;">
+                    <a href="#products" class="btn btn-primary">تسوّق الآن</a>
+                    <a href="#about" class="btn btn-outline">المزيد عن المتجر</a>
+                </div>
+            </div>
+
+            <aside class="hero-card" aria-label="عروض اليوم">
+                <h3>عروض اليوم</h3>
+                <ul>
+                    <li>شحن سكين CS:GO - %20 خصم</li>
+                    <li>بطاقة Google Play - توصيل فوري</li>
+                </ul>
+            </aside>
+        </section>
+
+        <section class="products" id="products" aria-label="قائمة المنتجات">
+            <!-- Example product cards; in a real site these would be rendered from data -->
+            <article class="product" role="article" aria-labelledby="p1">
+                <img src="https://via.placeholder.com/400x150?text=منتج+1" alt="صورة منتج 1">
+                <h3 id="p1">بطاقة شحن - 1000 عملة</h3>
+                <div class="price">د.ج 1,999</div>
+                <div style="margin-top:0.75rem;display:flex;gap:0.5rem;">
+                    <button class="btn btn-sm btn-primary">أضف إلى السلة</button>
+                    <button class="btn btn-sm btn-outline">تفاصيل</button>
+                </div>
+            </article>
+
+            <article class="product" role="article" aria-labelledby="p2">
+                <img src="https://via.placeholder.com/400x150?text=منتج+2" alt="صورة منتج 2">
+                <h3 id="p2">شحن سكن الأسلحة</h3>
+                <div class="price">د.ج 3,499</div>
+                <div style="margin-top:0.75rem;display:flex;gap:0.5rem;">
+                    <button class="btn btn-sm btn-primary">أضف إلى السلة</button>
+                    <button class="btn btn-sm btn-outline">تفاصيل</button>
+                </div>
+            </article>
+
+            <article class="product" role="article" aria-labelledby="p3">
+                <img src="https://via.placeholder.com/400x150?text=منتج+3" alt="صورة منتج 3">
+                <h3 id="p3">بطاقة Steam - 20$</h3>
+                <div class="price">د.ج 2,899</div>
+                <div style="margin-top:0.75rem;display:flex;gap:0.5rem;">
+                    <button class="btn btn-sm btn-primary">أضف إلى السلة</button>
+                    <button class="btn btn-sm btn-outline">تفاصيل</button>
+                </div>
+            </article>
+
+            <article class="product" role="article" aria-labelledby="p4">
+                <img src="https://via.placeholder.com/400x150?text=منتج+4" alt="صورة منتج 4">
+                <h3 id="p4">باقة تخفيضات VIP</h3>
+                <div class="price">د.ج 4,999</div>
+                <div style="margin-top:0.75rem;display:flex;gap:0.5rem;">
+                    <button class="btn btn-sm btn-primary">أضف إلى السلة</button>
+                    <button class="btn btn-sm btn-outline">تفاصيل</button>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="footer-inner">
+            <div>© 2026 Moha Shop DZ — جميع الحقوق محفوظة</div>
+            <div>دعم: <a href="mailto:support@mohashop.dz">support@mohashop.dz</a></div>
+        </div>
+    </footer>
+
+    <script>
+        // Configuration for working hours (local to Algeria — UTC+1 or UTC+2 depending on DST; we'll use Africa/Algiers zone via Intl if available)
+        (function () {
+            const openHour = 9; // 09:00
+            const closeHour = 21; // 21:00
+            const banner = document.getElementById('workingBanner');
+            const statusText = document.getElementById('statusText');
+            const statusDot = document.getElementById('statusDot');
+            const countdownEl = document.getElementById('countdown');
+
+            function getAlgiersNow() {
+                // Use Intl to get time in Africa/Algiers; fallback to local time if not supported
+                try {
+                    const now = new Date();
+                    const tz = 'Africa/Algiers';
+                    const parts = new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit', year: 'numeric', month: 'numeric', day: 'numeric' }).formatToParts(now);
+                    const map = {};
+                    parts.forEach(p => map[p.type] = p.value);
+                    // Build a date in that timezone using the numeric parts
+                    return new Date(`${map.year}-${map.month.padStart(2,'0')}-${map.day.padStart(2,'0')}T${map.hour.padStart(2,'0')}:${map.minute.padStart(2,'0')}:${map.second.padStart(2,'0')}`);
+                } catch (e) {
+                    return new Date();
+                }
+            }
+
+            function updateStatus() {
+                const now = getAlgiersNow();
+                const hour = now.getHours();
+                const minute = now.getMinutes();
+                const open = hour >= openHour && hour < closeHour;
+                if (open) {
+                    banner.classList.remove('closed');
+                    statusDot.classList.add('open');
+                    statusDot.classList.remove('closed');
+                    statusText.textContent = 'المتجر مفتوح الآن';
+                    statusText.classList.remove('closed');
+                    statusText.classList.add('open');
+                    // countdown to close
+                    const closeTime = new Date(now);
+                    closeTime.setHours(closeHour,0,0,0);
+                    const diff = closeTime - now;
+                    updateCountdown(diff);
+                } else {
+                    banner.classList.add('closed');
+                    statusDot.classList.remove('open');
+                    statusDot.classList.add('closed');
+                    statusText.textContent = 'المتجر مغلق حالياً';
+                    statusText.classList.remove('open');
+                    statusText.classList.add('closed');
+                    // countdown to next open
+                    const nextOpen = new Date(now);
+                    if (hour >= closeHour) {
+                        // tomorrow
+                        nextOpen.setDate(nextOpen.getDate() + 1);
+                    }
+                    nextOpen.setHours(openHour,0,0,0);
+                    const diff = nextOpen - now;
+                    updateCountdown(diff);
+                }
+            }
+
+            function updateCountdown(ms) {
+                if (ms <= 0) { countdownEl.textContent = '00:00:00'; return; }
+                const sec = Math.floor(ms / 1000) % 60;
+                const min = Math.floor(ms / (1000 * 60)) % 60;
+                const hrs = Math.floor(ms / (1000 * 60 * 60));
+                countdownEl.textContent = `${String(hrs).padStart(2,'0')}:${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+            }
+
+            // Initial run
+            updateStatus();
+            // Update every second for countdown, but status every 30s
+            setInterval(() => updateStatus(), 1000);
+
+            // Mobile nav toggle
+            const mobileToggle = document.getElementById('mobileNavToggle');
+            const navLinks = document.getElementById('navLinks');
+            mobileToggle.addEventListener('click', () => {
+                const expanded = mobileToggle.getAttribute('aria-expanded') === 'true';
+                mobileToggle.setAttribute('aria-expanded', String(!expanded));
+                if (navLinks.style.display === 'flex') {
+                    navLinks.style.display = '';
+                } else {
+                    navLinks.style.display = 'flex';
+                    navLinks.style.flexDirection = 'column';
+                    navLinks.style.gap = '1rem';
+                    navLinks.style.background = 'var(--card)';
+                    navLinks.style.padding = '1rem';
+                    navLinks.style.position = 'absolute';
+                    navLinks.style.top = '68px';
+                    navLinks.style.right = '1rem';
+                    navLinks.style.borderRadius = '10px';
+                    navLinks.setAttribute('aria-hidden', 'false');
+                }
+            });
+
+            // Gesture/keyboard accessible close for nav
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    navLinks.style.display = '';
+                    mobileToggle.setAttribute('aria-expanded','false');
+                }
+            });
+
+            // Particle generation (lightweight)
+            const particlesEl = document.getElementById('particles');
+            function spawnParticles(count = 18) {
+                for (let i=0;i<count;i++) {
+                    const p = document.createElement('div');
+                    p.className = 'particle';
+                    p.style.left = Math.random() * 100 + '%';
+                    p.style.top = Math.random() * 100 + '%';
+                    p.style.width = `${2 + Math.random()*6}px`;
+                    p.style.height = p.style.width;
+                    p.style.opacity = 0.15 + Math.random()*0.4;
+                    p.style.animationDuration = `${10 + Math.random()*20}s`;
+                    p.style.transform = `translateY(0) rotate(${Math.random()*360}deg)`;
+                    particlesEl.appendChild(p);
+                    // cleanup
+                    setTimeout(() => { p.remove(); }, 30000);
+                }
+            }
+            spawnParticles(24);
+            setInterval(() => spawnParticles(8), 4000);
+
+            // Simple keyboard navigation focus management for products
+            const productButtons = Array.from(document.querySelectorAll('.product button'));
+            productButtons.forEach((btn, idx) => {
+                btn.addEventListener('keyup', (e) => {
+                    if (e.key === 'ArrowLeft') {
+                        const prev = productButtons[idx-1]; if (prev) prev.focus();
+                    } else if (e.key === 'ArrowRight') {
+                        const next = productButtons[idx+1]; if (next) next.focus();
+                    }
+                });
+            });
+
+            // Reduce motion for users who prefer it
+            const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+            if (prefersReduced.matches) {
+                document.querySelectorAll('.bg-animation, .particle').forEach(el => { el.style.animation = 'none'; });
+            }
+
+        })();
+    </script>
+</body>
+</html>
